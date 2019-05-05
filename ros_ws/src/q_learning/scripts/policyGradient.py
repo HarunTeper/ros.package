@@ -14,27 +14,31 @@ import random
 import rospy
 import car
 
+import os
+import sys
+from datetime import datetime
+
 rospy.init_node('learn', anonymous=True)
 
 
 # ACTIONS = [(-0.4, 0.05), (0.4, 0.05),(-0.2, 0.1), (0.2, 0.1),(-0.1, 0.15), (0.1, 0.15), (.0, 0.2), (.0, 0.1)]
 
 # angle space are 18 possible steering directions from -1 to 1
-angle_space = np.linspace(start=-1, stop=1, num=18, endpoint=True)
+angle_space = np.linspace(start=-1, stop=1, num=10, endpoint=True)
 angle_space_len = len(angle_space)
 angle_space = np.insert(angle_space, (angle_space_len/2), 0.0)
 
 # velocity space are the possible speed settings for the different steering directions
 # with higher speeds for smaller angles
 velocity_space_half = np.concatenate((
-        np.repeat(0.05, 6),
+        np.repeat(0.05, 2),
         np.repeat(0.1, 2),
         np.repeat(0.15, 1)))
 velocity_space = np.concatenate(
     (velocity_space_half,
     [2.0],
     np.flip(velocity_space_half)))
-   
+
 ACTIONS = zip(angle_space, velocity_space)
 ACTION_COUNT = len(ACTIONS)
 
@@ -56,20 +60,20 @@ class Policy(nn.Module):
         super(Policy, self).__init__()
         self.state_space = LASER_SAMPLE_COUNT
         self.action_space = ACTION_COUNT
-        
-        # self.l1 = nn.Linear(self.state_space, 256, bias=False)
-        # self.l2 = nn.Linear(256, self.action_space, bias=False)
 
-        self.l1 = nn.Linear(self.state_space, 64, bias=False)
-        self.l2 = nn.Linear(64, 32, bias=False)
-        self.l3 = nn.Linear(32, 16, bias=False)
-        self.l4 = nn.Linear(16, 32, bias=False)
-        self.l5 = nn.Linear(32, 64, bias=False)
-        self.l6 = nn.Linear(64, self.state_space, bias=False)
-        self.l7 = nn.Linear(self.state_space, self.action_space, bias=False)
-        
+        self.l1 = nn.Linear(self.state_space, 256, bias=False)
+        self.l2 = nn.Linear(256, self.action_space, bias=False)
+
+        # self.l1 = nn.Linear(self.state_space, 64, bias=False)
+        # self.l2 = nn.Linear(64, 32, bias=False)
+        # self.l3 = nn.Linear(32, 16, bias=False)
+        # self.l4 = nn.Linear(16, 32, bias=False)
+        # self.l5 = nn.Linear(32, 64, bias=False)
+        # self.l6 = nn.Linear(64, self.state_space, bias=False)
+        # self.l7 = nn.Linear(self.state_space, self.action_space, bias=False)
+
         self.gamma = gamma
-        
+
         # Episode policy and reward history 
         self.policy_history = Variable(torch.Tensor()) 
         self.reward_episode = []
@@ -78,36 +82,36 @@ class Policy(nn.Module):
         self.loss_history = []
 
     def forward(self, x):    
-        # model = torch.nn.Sequential(
-        #     self.l1,
-        #     nn.Dropout(p=0.6),
-        #     nn.ReLU(),
-        #     self.l2,
-        #     nn.Softmax(dim=-1)
-        # )
-
         model = torch.nn.Sequential(
             self.l1,
             nn.Dropout(p=0.6),
-            nn.ELU(),
+            nn.ReLU(),
             self.l2,
-            nn.Dropout(p=0.6),
-            nn.ELU(),
-            self.l3,
-            nn.Dropout(p=0.6),
-            nn.ELU(),
-            self.l4,
-            nn.Dropout(p=0.6),
-            nn.ELU(),
-            self.l5,
-            nn.Dropout(p=0.6),
-            nn.ELU(),
-            self.l6,
-            nn.Dropout(p=0.6),
-            nn.ELU(),
-            self.l7,
             nn.Softmax(dim=-1)
         )
+
+        # model = torch.nn.Sequential(
+        #     self.l1,
+        #     nn.Dropout(p=0.6),
+        #     nn.ELU(),
+        #     self.l2,
+        #     nn.Dropout(p=0.6),
+        #     nn.ELU(),
+        #     self.l3,
+        #     nn.Dropout(p=0.6),
+        #     nn.ELU(),
+        #     self.l4,
+        #     nn.Dropout(p=0.6),
+        #     nn.ELU(),
+        #     self.l5,
+        #     nn.Dropout(p=0.6),
+        #     nn.ELU(),
+        #     self.l6,
+        #     nn.Dropout(p=0.6),
+        #     nn.ELU(),
+        #     self.l7,
+        #     nn.Softmax(dim=-1)
+        # )
         return model(x)
 
 policy = Policy()
@@ -115,14 +119,14 @@ optimizer = optim.Adam(policy.parameters(), lr=learning_rate)
 
 
 def select_action(state):
-    #Select an action (0 or 1) by running policy model and choosing based on the probabilities in state
+    # Select an action (0 or 1) by running policy model and choosing based on the probabilities in state
     state = state.type(torch.FloatTensor)
     state = policy(Variable(state))
-    
+
     c = Categorical(state)
-    
+
     action = c.sample()
-    
+
     # Add log probability of our chosen action to our history    
     if policy.policy_history.dim() != 0:
         policy.policy_history = torch.cat([policy.policy_history, c.log_prob(action).view(1)])
@@ -134,15 +138,15 @@ def select_action(state):
 def update_policy():
     R = 0
     rewards = []
-    
+
     # Discount future rewards back to the present using gamma
     for r in policy.reward_episode[::-1]:
         R = r + policy.gamma * R
         rewards.insert(0, R)
-        
+
     # Scale rewards
     rewards = torch.FloatTensor(rewards)
-    
+
     ##########DEBUG
     # rospy.loginfo("BEFORE rewards: " + str(rewards))
     # rewards1 = rewards - rewards.mean()
@@ -150,24 +154,24 @@ def update_policy():
     # rewards2 = rewards.std() + np.finfo(np.float32).eps
     # rospy.loginfo("rewards std: " + str(rewards.std()))
     # rospy.loginfo("rewards finfo: " + str(np.finfo(np.float32).eps))
-    
+
     if rewards.numel() > 1:
         rewards = (rewards - rewards.mean()) / (rewards.std() + np.finfo(np.float32).eps)
 
     print('REWARDS: {}'.format(rewards))
-    
+
     # rospy.loginfo("AFTER rewards: " + str(rewards))
-    
+
     # Calculate loss
     loss = (torch.sum(torch.mul(policy.policy_history, Variable(rewards)).mul(-1), -1))
 
     print('LOSS: {}'.format(loss))
-    
+
     # Update network weights
     optimizer.zero_grad()
     loss.backward()
     optimizer.step()
-    
+
     # Save and intialize episode history counters
     policy.loss_history.append(loss.item())
     policy.reward_history.append(np.sum(policy.reward_episode))
@@ -187,65 +191,114 @@ def on_crash():
 
 
 def main(episodes, device):
-    global done, crash, deadlock 
-    running_reward = 1
-    average_reward_per_episode = 0
-    for episode in range(episodes):
+    if len(sys.argv) == 1:
+        print('No given model, starting from the scratch.')
+        global done, crash, deadlock
+        running_reward = 1
+        average_reward_per_episode = 0
+        for episode in range(episodes):
 
-        # Spawns the car the coordinates (x=0, y= -0.5) with an orientation of math.pi + (0 if random.random() > 0.5 else math.pi)
-        car.reset((0, -0.5), math.pi + (0 if random.random() > 0.5 else math.pi))
-        state = car.get_scan(LASER_SAMPLE_COUNT, device)
-        
-        # If true, the current episode will end instantly
-        done = False       
-    
-        for time in range(4000):
-            
-            # Choose an action w.r.t the current state
-            action = select_action(state)
-            # Step through environment using chosen action
-            perform_action(action)
-
-            # Get the next state
+            # Spawns the car the coordinates (x=0, y= -0.5) with an orientation of math.pi + (0 if random.random() > 0.5 else math.pi)
+            car.reset((0, -0.5), math.pi + (0 if random.random() > 0.5 else math.pi))
             state = car.get_scan(LASER_SAMPLE_COUNT, device)
 
-            # The faster the car is driving, the bigger the reward
-            running_reward = 1 * ACTIONS[action][1]
-            
-            # True when the car intersects with a wall 
-            if crash:
-                running_reward = -100 * ACTIONS[action][1]
-            crash = False
+            # If true, the current episode will end instantly
+            done = False
 
-            # True if car is flipped 
-            car_orientation = car.get_car_pos_x()
-            if (car_orientation[1] < -0.2 and car_orientation[1] > -0.322):
-                running_reward = -3000
-                done = True
+            for time in range(4000):
 
-            # End the episode if the car is driving against a wall for more than 4 steps
-            if running_reward < 0:
-                deadlock += 1
-                if deadlock >= 5:
+                # Choose an action w.r.t the current state
+                action = select_action(state)
+                # Step through environment using chosen action
+                perform_action(action)
+
+                # Get the next state
+                state = car.get_scan(LASER_SAMPLE_COUNT, device)
+
+                # The faster the car is driving, the bigger the reward
+                running_reward = 1 * ACTIONS[action][1]
+
+                # True when the car intersects with a wall 
+                if crash:
+                    running_reward = -100 * ACTIONS[action][1]
+                crash = False
+
+                # True if car is flipped
+                car_orientation = car.get_car_pos_x()
+                if (car_orientation[1] < -0.2 and car_orientation[1] > -0.322):
+                    running_reward = -3000
                     done = True
+
+                # End the episode if the car is driving against a wall for more than 4 steps
+                if running_reward < 0:
+                    deadlock += 1
+                    if deadlock >= 5:
+                        done = True
+                        deadlock = 0
+                else:
                     deadlock = 0
-            else:
-                deadlock = 0
-            
-            # Save reward
-            policy.reward_episode.append(running_reward)
-            average_reward_per_episode += running_reward
-            # End the episode
-            if done:
-                break
-        
-        # Used to determine when the environment is solved.
-        # running_reward = (running_reward * 0.99) + (time * 0.01)
 
-        update_policy()
+                # Save reward
+                policy.reward_episode.append(running_reward)
+                average_reward_per_episode += running_reward
+                # End the episode
+                if done:
+                    break
 
-        print('Episode {}\tLast length: {:5d}\tSum Reward: {}'.format(episode, time, average_reward_per_episode))
-        average_reward_per_episode = 0
+            # Used to determine when the environment is solved.
+            # running_reward = (running_reward * 0.99) + (time * 0.01)
+
+            update_policy()
+
+            print('Episode {}\tLast length: {:5d}\tSum Reward: {}'.format(episode, time, average_reward_per_episode))
+            average_reward_per_episode = 0
+
+            # save the model to the specified path every 50th episode
+            if (episode % 10) == 0:
+                nn_name = datetime.today().strftime('%Y-%m-%d_%H-%M') + '_episode_' + str(episode) + '.pt'
+                # nn_path = os.path.join('$HOME/nn_models', nn_name)
+                nn_path = os.path.join(os.environ['HOME'], 'nn_models', nn_name)
+
+                # only used for inference
+                torch.save(policy.state_dict(), nn_path)
+
+                # WIP
+                # used for inference and resuming training
+                # torch.save({
+                #     'episode': episode,
+                #     'model_state_dict': policy.state_dict(),
+                #     'optimizer_state_dict': optimizer.state_dict(),
+                #     'loss': loss,
+                #     }, nn_path)
+    else:
+        # ############################### WIP ############################
+        print('################################################################')
+        print('Using specified model parameters from: ', sys.argv[1])
+        nn_path = sys.argv[1]
+        print(nn_path)
+
+        # Print model's state_dict
+        print("Model's state_dict:")
+        for param_tensor in policy.state_dict():
+            print(param_tensor, "\t", policy.state_dict()[param_tensor].size())
+
+        # Print optimizer's state_dict
+        print("Optimizer's state_dict:")
+        for var_name in optimizer.state_dict():
+            print(var_name, "\t", optimizer.state_dict()[var_name])
+
+        policy.load_state_dict(torch.load(nn_path))
+
+        # Print model's state_dict
+        print("Model's state_dict:")
+        for param_tensor in policy.state_dict():
+            print(param_tensor, "\t", policy.state_dict()[param_tensor].size())
+
+        # Print optimizer's state_dict
+        print("Optimizer's state_dict:")
+        for var_name in optimizer.state_dict():
+            print(var_name, "\t", optimizer.state_dict()[var_name])
+
 
 rospy.loginfo("Initializing Pytorch...")
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -254,3 +307,9 @@ car.register_crash_callback(on_crash)
 episodes = 10000
 main(episodes, device)
 
+
+# if __name__ == "__main__":
+#     if sys.argv is None:
+#         main(episodes, device)
+#     else:
+#         main(episode)
