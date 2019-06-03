@@ -26,7 +26,7 @@ AiTrainer::AiTrainer()
         m_node_handle.subscribe<std_msgs::Empty>(TOPIC_CRASH_SUBSCRIBE, 1, &AiTrainer::crashCallback, this);
     m_drive_parameters_subscriber =
         m_node_handle.subscribe<drive_msgs::drive_param>(TOPIC_DRIVE_PARAMETERS_SUBSCRIBE, 1,
-                                                         &AiTrainer::driveParametersCallback, this);
+                                                        &AiTrainer::driveParametersCallback, this);
     m_laptimer_subscriber =
         m_node_handle.subscribe<std_msgs::Duration>(TOPIC_LAP_TIMER_SUBSCRIBE, 1, &AiTrainer::lapTimerCallback, this);
     m_gazebo_model_state_publisher =
@@ -87,7 +87,7 @@ bool AiTrainer::init()
     for (int i = 0; i < m_generation_size; i++)
     {
         FANN::neural_net* net = new FANN::neural_net();
-        net->create_standard_array(NUM_LAYERS, NET_ARGS);
+        net->create_standard_array(ai_config::DEFAULT_NUM_LAYERS, ai_config::DEFAULT_LAYER_ARRAY);
         m_nets.push_back(net);
         m_meta.push_back(new meta());
     }

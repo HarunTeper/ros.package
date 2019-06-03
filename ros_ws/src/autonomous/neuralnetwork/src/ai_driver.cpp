@@ -2,6 +2,8 @@
 
 #include "ai_util.h"
 
+using namespace ai_driver;
+
 AiDriver::AiDriver()
 {
     ros::NodeHandle private_node_handle("~");
@@ -80,7 +82,7 @@ void AiDriver::netDeployCallback(const neuralnetwork::net_param::ConstPtr& data)
     {
         arr[i].weight = data->weights[i];
     }
-    m_net.create_standard_array(NUM_LAYERS, NET_ARGS);
+    m_net.create_standard_array(ai_config::DEFAULT_NUM_LAYERS, ai_config::DEFAULT_LAYER_ARRAY);
     m_net.set_weight_array(arr, size);
 
     m_deployed = true;
