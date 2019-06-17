@@ -235,7 +235,7 @@ rospy.Subscriber(TOPIC_LASER_SCAN, LaserScan, laser_callback)
 drive_parameters_publisher = rospy.Publisher(
     TOPIC_DRIVE_PARAMETERS, drive_param, queue_size=1)
 
-dyn_cfg_srv = Server(wallfollowing2Config, dynamic_configuration_callback)
+Server(wallfollowing2Config, dynamic_configuration_callback)
 
 while not rospy.is_shutdown():
     rospy.spin()
