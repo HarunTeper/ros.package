@@ -64,6 +64,9 @@ class Parameters():
             value = rospy.get_param("wallfollowing/" + name, default)
             setattr(self, name, value)
 
+    def __str__(self):
+        return '\n'.join(name + ": " + str(getattr(self, name)) for name in self.names)
+
 
 class PIDController():
     def __init__(self, p, i, d, anti_windup=0.2):
