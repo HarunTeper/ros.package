@@ -233,8 +233,8 @@ void AiTrainer::createNextGeneration()
 
         NetVector parent_vec = net_to_vector(parent);
         NetVector m_vec = ai_workspace::mutate(parent_vec, m_learning_rate);
-        uint layers = parent->get_num_layers();
-        uint layer_array[parent->get_num_layers()];
+        unsigned int layers = parent->get_num_layers();
+        unsigned int layer_array[parent->get_num_layers()];
         parent->get_layer_array(layer_array);
         FANN::neural_net* m = vector_to_net(m_vec, layers, layer_array);
 

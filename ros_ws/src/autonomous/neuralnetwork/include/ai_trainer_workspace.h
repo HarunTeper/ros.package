@@ -44,7 +44,7 @@ namespace ai_workspace
     // creates a mutation of a parent vector
     inline NetVector mutate(NetVector parent, double learning_rate)
     {
-        auto r_uniform = r_normal_distribution(parent.size(), 0, learning_rate);
+        auto r_uniform = random_normal_distribution(parent.size(), 0, learning_rate);
         // auto r_binary = r_binary_mutation(parent.size(), 2);
         // auto random = mult(r_uniform, r_binary);
         // auto m = add(parent, random);

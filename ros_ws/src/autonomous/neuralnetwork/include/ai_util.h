@@ -49,7 +49,7 @@ namespace ai_util
         uint n = net->get_total_neurons();
         uint c = net->get_total_connections();
         NetVector vec = net_to_vector(net);
-        fann_type sig = sum(vec);
+        fann_type sig = check_sum(vec);
         if (sig < (fann_type)0)
         {
             sig = sig * (fann_type)-1;
@@ -70,7 +70,7 @@ namespace ai_util
     inline string net_to_string_id(FANN::neural_net* net)
     {
         NetVector vec = net_to_vector(net);
-        fann_type sig = sum(vec);
+        fann_type sig = check_sum(vec);
         if (sig < (fann_type)0)
         {
             sig = sig * (fann_type)-1;
