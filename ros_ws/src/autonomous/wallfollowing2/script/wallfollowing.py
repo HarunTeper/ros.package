@@ -220,7 +220,6 @@ def dynamic_configuration_callback(config, level):
     pid.p = parameters.controller_p
     pid.i = parameters.controller_i
     pid.d = parameters.controller_d
-    return config
 
 
 rospy.init_node('wallfollowing', anonymous=True)
