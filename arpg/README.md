@@ -8,22 +8,6 @@ Autonomous Racing - Project Group - TU Dortmund
 
 These instructions will get you a copy of the project up and running
 
-### Install missing system dependencies
-```bash
-sudo apt install libsdl2-dev python-pip clang-format
-pip install torch autopep8
-
-# RangeLibc
-sudo pip uninstall pip && sudo apt install python-pip
-pip install cython
-git clone http://github.com/kctess5/range_libc
-cd range_libc/pywrapper
-# Either:
-./compile.sh            # on VM
-# Or:
-./compile_with_cuda.sh  # on car - compiles GPU ray casting methods
-```
-
 ### Clone the Project
 
 ```bash
@@ -37,7 +21,7 @@ cd arpg
 cd ros_ws
 ```
 
-### Install missing ROS dependencies
+### Install missing dependencies
 ```bash
 rosdep install -y --from-paths src --ignore-src --rosdistro ${ROS_DISTRO}
 ```

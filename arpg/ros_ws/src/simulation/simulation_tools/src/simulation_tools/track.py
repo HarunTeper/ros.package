@@ -3,10 +3,6 @@
 import random
 import numpy as np
 import math
-import rospy
-import sys
-
-from tf.transformations import euler_from_quaternion
 
 from collections import namedtuple
 Point = namedtuple("Point", ["x", "y"])
@@ -32,18 +28,6 @@ class TrackPosition():
             self.distance_to_center,
             self.angle * 180 / math.pi
         )
-
-    def get_relative_angle(self, orientation):
-        quaternion = [
-            orientation.w,
-            orientation.x,
-            orientation.y,
-            orientation.z]
-        euler = euler_from_quaternion(quaternion)
-        return (euler[0] + self.angle) % (2 * math.pi) - math.pi
-
-    def faces_forward(self, orientation):
-        return abs(self.get_relative_angle(orientation)) < math.pi / 2
 
 
 class Track():
@@ -83,15 +67,6 @@ class Track():
         return TrackPosition(segment, distance_to_center,  # nopep8
             segment_distance, Point(x, y), self)  # nopep8
 
-
-world_name = rospy.get_param("world_name")
-
-if world_name not in [
-    "racetrack_decorated",
-    "racetrack_decorated_2",
-        "racetrack_decorated_2_big"]:
-    print "ERROR: Racetrack not supported by track.py"
-    sys.exit(1)
 
 POINTS = np.array((
     (2.64, -0.36),
@@ -144,8 +119,5 @@ POINTS = np.array((
     (-9.02, 0.66),
     (-6.00, -0.17),
     (2.64, -0.36)))
-
-if world_name == "racetrack_decorated_2_big":
-    POINTS *= 2.5
 
 track = Track(POINTS)

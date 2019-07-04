@@ -1,9 +1,7 @@
-workspace_path=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/../../ros_ws
-
 FOUND_PROBLEMS=false
 
 # Check C++ code
-for FILE in $(find "$workspace_path" -path '*ros_ws/src/external_packages' -prune -o \( -name '*.h' -or -name '*.cpp' \) -print)
+for FILE in $(find "./" -path './src/external_packages' -prune -o \( -name '*.h' -or -name '*.cpp' \) -print)
 do
     if clang-format-3.8 -i -style=file -output-replacements-xml $FILE | grep -c "<replacement " > /dev/null ; then
         echo "Formatting problem in:" $FILE
@@ -12,7 +10,7 @@ do
 done
 
 # Check python code
-PYTHON_DIFF=$(autopep8 --diff --recursive --aggressive --aggressive --exclude="$workspace_path/src/external_packages,$workspace_path/build,$workspace_path/devel" $workspace_path)
+PYTHON_DIFF=$(autopep8 --diff --recursive --aggressive --aggressive .)
 
 if echo $PYTHON_DIFF | grep -c +++ > /dev/null ; then
     echo "Found formatting problems in the python code."
