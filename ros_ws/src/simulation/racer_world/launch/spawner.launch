@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    <node pkg = "racer_world" name="spawner" type = "spawner.py" output="screen" />
+</launch>

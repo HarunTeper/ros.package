@@ -12,6 +12,7 @@
     <arg name="pf_angle_step" default="18"/>
     <arg name="pf_max_particles" default="500"/>
     <arg name="pf_squash_factor" default="2.2"/>
+    <arg name="map" default="$(find navigation_stack_config)/maps/dynamicstage.yaml"/>
     <arg name="emergency_stop" default="true"/>
     <arg name="car_highlighting" default="false"/>
 
@@ -44,6 +45,10 @@
     <include file="$(find teleoperation)/launch/remote_control.launch">
         <arg name="joystick_type" value="$(arg joystick_type)"/>
     </include>
+
+    <include file="$(find navigation_stack_config)/launch/move_base.launch"/>
+
+    <include file="$(find navigation_stack_control_converter)/launch/navigation_stack_control_converter.launch"/>
 
     <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
 
