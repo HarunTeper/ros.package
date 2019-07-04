@@ -8,17 +8,17 @@ Launches all necessary nodes that let the user control the car with the keyboard
   <arg name="joystick_type" default="xbox360"/>
 
     <!-- remote joy -->
-    <!--node
+    <node
       respawn="false"
       pkg="teleoperation"
       type="joystick_controller"
       name="joystick_controller"
       output="screen" >
       <param name="joystick_type" type="string" value ="$(arg joystick_type)" />
-    </node-->
+    </node>
 
     <!-- joy node -->
-    <!--node
+    <node
       respawn="false"
       pkg="joy"
       type="joy_node"
@@ -28,7 +28,7 @@ Launches all necessary nodes that let the user control the car with the keyboard
       <param name="dev" type="string" value="/dev/input/js0" />
       <param name="deadzone" value="0.12" />
       <param name="autorepeat_rate" value = "100" />
-    </node-->
+    </node>
 
     <!-- remote keyboard -->
     <node
