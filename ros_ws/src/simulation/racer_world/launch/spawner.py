@@ -10,44 +10,41 @@ def move(data):
   global oldtime
   global forward 
   
-  rospy.loginfo("Objects: %s.",data.name)
-  msg = ModelState()
-  msg.model_name ='unit_sphere'
-
-  x=data.name.index('unit_sphere')
-  rospy.loginfo("Sphere is at %d",x)
-
-  msg.pose = data.pose[x]
-  msg.twist = data.twist[x]
-  msg.reference_frame = 'ground_plane'
-
   time = rospy.get_rostime()
-
-  rospy.loginfo("Time is %i",time.secs)
-  rospy.loginfo("Oldtime is %i",oldtime.secs)
-
-  rospy.loginfo("forward is %r",forward)
   if time.secs-oldtime.secs > 5:
-    oldtime = time
+    msg = ModelState()
+    msg.model_name ='unit_sphere'
+    x=data.name.index('unit_sphere')
+    msg.pose = data.pose[x]
+    msg.twist = data.twist[x]
+    msg.reference_frame = 'ground_plane'
+    
     forward = not forward
-  if forward:
-    msg.twist.angular.x=1
-    msg.twist.angular.y=0
-    msg.twist.angular.z=0
-  if not forward:
-    msg.twist.angular.x=-1
-    msg.twist.angular.y=0
-    msg.twist.angular.z=0
-  pub.publish(msg)
+    oldtime = time
+    if forward:
+      msg.twist.linear.x=1
+      msg.twist.linear.y=0
+      msg.twist.linear.z=0
+      msg.twist.angular.x=0
+      msg.twist.angular.y=0
+      msg.twist.angular.z=0
+    if not forward:
+      msg.twist.linear.x=-1
+      msg.twist.linear.y=0
+      msg.twist.linear.z=0
+      msg.twist.angular.x=0
+      msg.twist.angular.y=0
+      msg.twist.angular.z=0
+    pub.publish(msg)
 
 
-  rospy.loginfo("The name is %s.\n",msg.model_name)
   
 if __name__ == '__main__': 
   try:
     rospy.init_node('spawner')
     model_state_topic = rospy.get_param('~model_state_topic', '/gazebo/model_states') 
-    set_model_state_topic = rospy.get_param('~set_model_state_topic', '/gazebo/set_model_state')      
+    set_model_state_topic = rospy.get_param('~set_model_state_topic', '/gazebo/set_model_state') 
+     
     forward = True
     time = rospy.get_rostime()
     oldtime= time

@@ -33,24 +33,9 @@
         <arg name="visualize_lidar" value="$(arg visualize_lidar)"/>
     </include>
 
-    <node name="rviz" pkg="rviz" type="rviz" args="-d $(find car_control)/launch/car.rviz"/>
-
-    <include file="$(find vesc_sim)/launch/vesc_sim.launch"/>
-
-    <include file="$(find car_control)/launch/car_control.launch">
-        <arg name="mode_override" value="$(arg mode_override)"/>
-    </include>
-
-    <include file="$(find teleoperation)/launch/remote_control.launch">
-        <arg name="joystick_type" value="$(arg joystick_type)"/>
-    </include>
-
-    <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
-
-
     <param name="box_description" command="$(find xacro)/xacro --inorder '$(find racer_description)/urdf/sphere.xacro'"/>
 
-    <node name="sphere_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param sphere_description -model unit_sphere" />
+    <node name="sphere_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param box_description -model unit_sphere" />
 
 
 </launch>
