@@ -5,37 +5,79 @@ from geometry_msgs.msg import Twist
 from gazebo_msgs.msg import ModelStates
 from gazebo_msgs.msg import ModelState
 
+
+
 def move(data):
   global time
   global oldtime
-  global forward 
+  global forward
+  global waypointsx
+  global waypointsy
+  global waypointx
+  global waypointy
+  global index
   
-  time = rospy.get_rostime()
-  if time.secs-oldtime.secs > 5:
-    msg = ModelState()
-    msg.model_name ='unit_sphere'
-    x=data.name.index('unit_sphere')
-    msg.pose = data.pose[x]
-    msg.twist = data.twist[x]
-    msg.reference_frame = 'ground_plane'
+  waypointx=waypointsx[index]
+  waypointy=waypointsy[index]
+
+  msg = ModelState()
+  msg.model_name ='unit_sphere'
+  x=data.name.index('unit_sphere')
+  msg.pose = data.pose[x]
+  msg.twist = data.twist[x]
+  msg.reference_frame = 'ground_plane'
+  distancex = waypointx - msg.pose.position.x 
+  distancey = waypointy - msg.pose.position.y
+
+  length = math.sqrt(math.pow(distancex,2)+math.pow(distancey,2))
+
+  msg.twist.linear.x=distancex/length
+  msg.twist.linear.y=distancey/length
+  msg.twist.linear.z=0
+  msg.twist.angular.x=0
+  msg.twist.angular.y=0
+  msg.twist.angular.z=0
+  pub.publish(msg)
+  rospy.loginfo("waypointx is %f",waypointx)
+  rospy.loginfo("waypointy is %f",waypointy)
+  rospy.loginfo("waypointx is %f",waypointx)
+  rospy.loginfo("waypointy is %f",waypointy)
+  rospy.loginfo("distancex is %f",distancex)
+  rospy.loginfo("distancey is %f",distancey)
+  rospy.loginfo("length is %f",length)
+  rospy.loginfo("linearx is %f",distancex/length)
+  rospy.loginfo("lineary is %f",distancey/length)
+  if length < 0.01:
+    index = (index +x) % len(waypointsx)
+    waypointx = waypointsx[index]
+    waypointy = waypointsy[index]
     
-    forward = not forward
-    oldtime = time
-    if forward:
-      msg.twist.linear.x=1
-      msg.twist.linear.y=0
-      msg.twist.linear.z=0
-      msg.twist.angular.x=0
-      msg.twist.angular.y=0
-      msg.twist.angular.z=0
-    if not forward:
-      msg.twist.linear.x=-1
-      msg.twist.linear.y=0
-      msg.twist.linear.z=0
-      msg.twist.angular.x=0
-      msg.twist.angular.y=0
-      msg.twist.angular.z=0
-    pub.publish(msg)
+  #time = rospy.get_rostime()
+  #if time.secs-oldtime.secs > 5:
+  #  msg = ModelState()
+  #  msg.model_name ='unit_sphere'
+  #  x=data.name.index('unit_sphere')
+  #  msg.pose = data.pose[x]
+  #  msg.twist = data.twist[x]
+  #  msg.reference_frame = 'ground_plane'
+  #  
+  #  forward = not forward
+  #  oldtime = time
+  #  if forward:
+  #    msg.twist.linear.x=1
+  #    msg.twist.linear.y=0
+  #    msg.twist.linear.z=0
+  #    msg.twist.angular.x=0
+  #    msg.twist.angular.y=0
+  #    msg.twist.angular.z=0
+  #  if not forward:
+  #    msg.twist.linear.x=-1
+  #    msg.twist.linear.y=0
+  #    msg.twist.linear.z=0
+  #    msg.twist.angular.x=0
+  #    msg.twist.angular.y=0
+  #    msg.twist.angular.z=0
+  #  pub.publish(msg)
 
 
   
@@ -48,6 +90,10 @@ if __name__ == '__main__':
     forward = True
     time = rospy.get_rostime()
     oldtime= time
+
+    waypointsx= [1,9,9,1]
+    waypointsy= [1,1,-9,-9]
+    index = 0
     
     rospy.Subscriber(model_state_topic, ModelStates, move, queue_size=1)
     pub = rospy.Publisher(set_model_state_topic, ModelState, queue_size=1)
