@@ -23,7 +23,7 @@ def move(data):
 
   msg = ModelState()
   msg.model_name =sys.argv[1]
-  x=data.name.index('unit_sphere')
+  x=data.name.index(msg.model_name)
   msg.pose = data.pose[x]
   msg.twist = data.twist[x]
   msg.reference_frame = 'ground_plane'
@@ -38,8 +38,12 @@ def move(data):
     distancex = waypointx - msg.pose.position.x 
     distancey = waypointy - msg.pose.position.y
     length = math.sqrt(math.pow(distancex,2)+math.pow(distancey,2))
-  msg.twist.linear.x=distancex/length
-  msg.twist.linear.y=distancey/length
+  if length = 0 :
+    msg.twist.linear.x=0
+    msg.twist.linear.y=0
+  else:
+    msg.twist.linear.x=distancex/length
+    msg.twist.linear.y=distancey/length
   msg.twist.linear.z=0
   msg.twist.angular.x=0
   msg.twist.angular.y=0

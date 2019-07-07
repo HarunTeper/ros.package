@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node pkg = "racer_world" name="spawner" type = "spawner.py" args = "unit_sphere 1,9,9,1 1,1,-9,-9" output="screen" />
+    <node pkg = "racer_world" name="spawner1" type = "spawner.py" args = "sphere1 1,9,9,1 1,1,-9,-9" output="screen" />
+    <node pkg = "racer_world" name="spawner2" type = "spawner.py" args = "sphere2 -1 1" output="screen" />
+    <node pkg = "racer_world" name="spawner3" type = "spawner.py" args = "sphere3 -1 -1" output="screen" />
     
 </launch>
