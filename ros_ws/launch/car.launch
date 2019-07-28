@@ -6,7 +6,7 @@
     <arg name="gui" default="true"/>
     <arg name="debug" default="false"/>
     <arg name="verbose" default="true"/>
-    <arg name="use_gpu" default="true"/>
+    <arg name="use_gpu" default="false"/>
     <arg name="joystick_type" default="xbox360"/>
     <arg name="visualize_lidar" default="false"/>
     <arg name="pf_angle_step" default="18"/>
@@ -46,11 +46,6 @@
     </include>
 
     <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
-
-
-    <param name="box_description" command="$(find xacro)/xacro --inorder '$(find racer_description)/urdf/sphere.xacro'"/>
-
-    <node name="sphere_spawn" pkg="gazebo_ros" type="spawn_model" output="screen" args="-urdf -param sphere_description -model unit_sphere" />
 
 
 </launch>

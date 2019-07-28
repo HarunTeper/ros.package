@@ -38,7 +38,7 @@ def move(data):
     distancex = waypointx - msg.pose.position.x 
     distancey = waypointy - msg.pose.position.y
     length = math.sqrt(math.pow(distancex,2)+math.pow(distancey,2))
-  if length = 0 :
+  if length == 0 :
     msg.twist.linear.x=0
     msg.twist.linear.y=0
   else:
