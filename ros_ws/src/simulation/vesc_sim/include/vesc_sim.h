@@ -21,8 +21,8 @@ class VESCSimulator
 
     private:
     ros::NodeHandle m_node_handle;
-    ros::Publisher m_odometry_publisher;
-    tf::TransformBroadcaster m_tf_publisher;
+    //ros::Publisher m_odometry_publisher;
+    //tf::TransformBroadcaster m_tf_publisher;
     ros::Timer m_timer;
     ros::Time m_last_stamp;
 

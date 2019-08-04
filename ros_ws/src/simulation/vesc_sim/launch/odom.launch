@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node pkg = "vesc_sim" name="idealodometry" type = "odom.py" output="screen" />
+    <node pkg = "vesc_sim" name="odometry" type = "odom.py" output="screen" />
     
 </launch>
