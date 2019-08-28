@@ -22,7 +22,7 @@ VESCSimulator::VESCSimulator()
     m_odom_frame = "odom";
     m_base_frame = "base_link";
 
-    //this->m_odometry_publisher = this->m_node_handle.advertise<nav_msgs::Odometry>("odom", 10);
+    this->m_odometry_publisher = this->m_node_handle.advertise<nav_msgs::Odometry>("odom", 10);
 }
 
 void VESCSimulator::start()
@@ -100,8 +100,8 @@ void VESCSimulator::timerCallback(const ros::TimerEvent& event)
 
     if (ros::ok())
     {
-        //m_odometry_publisher.publish(odom);
-        //m_tf_publisher.sendTransform(tf);
+        m_odometry_publisher.publish(odom);
+        m_tf_publisher.sendTransform(tf);
     }
 
 }

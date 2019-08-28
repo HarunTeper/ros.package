@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <arg name="world" default="racetrack_decorated_2"/>
+
+    <arg name="world" default="racer_willow"/>
     <arg name="paused" default="false"/>
     <arg name="use_sim_time" default="true"/>
     <arg name="gui" default="true"/>
@@ -9,10 +10,6 @@
     <arg name="use_gpu" default="false"/>
     <arg name="joystick_type" default="xbox360"/>
     <arg name="visualize_lidar" default="false"/>
-    <arg name="pf_angle_step" default="18"/>
-    <arg name="pf_max_particles" default="500"/>
-    <arg name="pf_squash_factor" default="2.2"/>
-    <arg name="map" default="$(find navigation_stack_config)/maps/recording.bag.yaml"/>
     <arg name="emergency_stop" default="true"/>
     <arg name="car_highlighting" default="false"/>
 
@@ -45,12 +42,6 @@
     <include file="$(find teleoperation)/launch/remote_control.launch">
         <arg name="joystick_type" value="$(arg joystick_type)"/>
     </include>
-
-    <include file="$(find navigation_stack_config)/launch/move_base.launch">
-	<arg name="map" value="$(arg map)"/>
-    </include>
-
-    <include file="$(find navigation_stack_control_converter)/launch/navigation_stack_control_converter.launch"/>
 
     <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
 

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sdf version="1.4">
+
+  <world name="default">
+
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+
+    <include>
+      <uri>model://sun</uri>
+    </include>
+
+    <include>
+      <uri>model://willowgarage</uri>
+    </include>
+
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf0'</name>
+      <pose frame=''>17.5 14 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf1'</name>
+      <pose frame=''>19.5 14 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf2'</name>
+      <pose frame=''>21.5 14 0 0 -0 0</pose>
+    </include>
+    <!--include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf3'</name>
+      <pose frame=''>23.5 14 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf4'</name>
+      <pose frame=''>25.5 14 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf5'</name>
+      <pose frame=''>27.5 14 0 0 -0 0</pose>
+    </include-->
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf6'</name>
+      <pose frame=''>29.5 14 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf7'</name>
+      <pose frame=''>31.5 14 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://bookshelf</uri>
+      <name>'bookshelf8'</name>
+      <pose frame=''>33.5 14 0 0 -0 0</pose>
+    </include>
+
+
+    <include>
+      <uri>model://table</uri>
+      <name>'table00'</name>
+      <pose frame=''>18.5 16.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://table</uri>
+      <name>'table01'</name>
+      <pose frame=''>22.5 16.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://table</uri>
+      <name>'table02'</name>
+      <pose frame=''>28.5 16.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://table</uri>
+      <name>'table03'</name>
+      <pose frame=''>32.5 16.5 0 0 -0 0</pose>
+    </include>
+
+
+    <include>
+      <uri>model://table</uri>
+      <name>'table10'</name>
+      <pose frame=''>18.5 11.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://table</uri>
+      <name>'table20'</name>
+      <pose frame=''>22.5 11.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://table</uri>
+      <name>'table30'</name>
+      <pose frame=''>28.5 11.5 0 0 -0 0</pose>
+    </include>
+    <include>
+      <uri>model://table</uri>
+      <name>'table40'</name>
+      <pose frame=''>32.5 11.5 0 0 -0 0</pose>
+    </include>
+
+    
+      
+    <!-- Focus camera on tall pendulum -->
+    <gui fullscreen='0'>
+      <camera name='user_camera'>
+        <pose>1.9 -1.37 0.740080 0.000000 0.275643 2.356190</pose>
+        <view_controller>orbit</view_controller>
+      </camera>
+    </gui>
+
+  </world>
+</sdf>

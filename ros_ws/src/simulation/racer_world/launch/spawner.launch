@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <launch>
-    <node pkg = "racer_world" name="spawner1" type = "spawner.py" args = "sphere1 1,9,9,1 1,1,-9,-9" output="screen" />
-    <node pkg = "racer_world" name="spawner2" type = "spawner.py" args = "sphere2 -1 1" output="screen" />
-    <node pkg = "racer_world" name="spawner3" type = "spawner.py" args = "sphere3 -1 -1" output="screen" />
+    <node pkg = "racer_world" name="spawner0" type = "spawner.py" args = "sphere0 16,16 18,10 1" output="screen" />
+    <node pkg = "racer_world" name="spawner1" type = "spawner.py" args = "sphere1 18,18 10,18 2" output="screen" />
+    <node pkg = "racer_world" name="spawner2" type = "spawner.py" args = "sphere2 20,20 18,10 2" output="screen" />
+    <node pkg = "racer_world" name="spawner3" type = "spawner.py" args = "sphere3 22,22 18,10 3" output="screen" />
+    <node pkg = "racer_world" name="spawner4" type = "spawner.py" args = "sphere4 24,24 10,18 1" output="screen" />
+    <node pkg = "racer_world" name="spawner5" type = "spawner.py" args = "sphere5 26,26 18,10 2" output="screen" />
+    <node pkg = "racer_world" name="spawner6" type = "spawner.py" args = "sphere6 28,28 10,18 1" output="screen" />
+    <node pkg = "racer_world" name="spawner7" type = "spawner.py" args = "sphere7 30,30 10,18 3" output="screen" />
+    <node pkg = "racer_world" name="spawner8" type = "spawner.py" args = "sphere8 32,32 18,10 2" output="screen" />
+    <node pkg = "racer_world" name="spawner9" type = "spawner.py" args = "sphere9 34,34 10,18 1" output="screen" />
     
 </launch>

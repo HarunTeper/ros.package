@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<launch>
+  <master auto="start"/>
+  <param name="/use_sim_time" value="true"/>
+  <arg name="particles" value="50"/>
+  <!--- Run gmapping -->
+  <node pkg="gmapping" name="slam_gmapping" type="slam_gmapping" output="screen">
+    <param name="delta" value="0.1"/>
+    <param name="xmin" value="-10"/>
+    <param name="xmax" value="10"/>
+    <param name="ymin" value="-10"/>
+    <param name="ymax" value="10"/>
+    <remap from="scan" to="scan"/>
+    <param name="base_frame" value="base_link" />
+
+    <param name="linearUpdate" value="0.1"/>
+    <param name="angularUpdate" value="0.1"/>
+    <param name="temporalUpdate" value="0.1"/>
+    <param name="resampleThreshold" value="$(arg particles)/2"/>
+    <param name="particles" value="$(arg particles)"/>
+    <param name="map_update_interval" value="1.0"/>
+    <param name="lskip" value="10"/>
+    <param name="minimumScore" value="50"/>
+
+    <param name="srr" value="0.1"/>
+    <param name="srt" value="0.05"/>
+    <param name="str" value="0.1"/>
+    <param name="stt" value="0.05"/>
+
+  </node>
+
+
+</launch>

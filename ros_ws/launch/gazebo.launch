@@ -6,9 +6,13 @@
     <arg name="gui" default="true"/>
     <arg name="debug" default="false"/>
     <arg name="verbose" default="true"/>
-    <arg name="use_gpu" default="true"/>
+    <arg name="use_gpu" default="false"/>
     <arg name="joystick_type" default="xbox360"/>
     <arg name="visualize_lidar" default="false"/>
+    <arg name="pf_angle_step" default="18"/>
+    <arg name="pf_max_particles" default="500"/>
+    <arg name="pf_squash_factor" default="2.2"/>
+    <arg name="map" default="$(find navigation_stack_config)/maps/recording.bag.yaml"/>
     <arg name="emergency_stop" default="true"/>
     <arg name="car_highlighting" default="false"/>
 
@@ -18,8 +22,6 @@
         0 uses user input to enable the modes
     -->
     <arg name="mode_override" default="0"/>
-
-    <param name="world_name" value="$(arg world)"/>
 
     <include file="$(find racer_world)/launch/racer_gazebo.launch">
         <arg name="world" value="$(arg world)"/>
@@ -35,21 +37,18 @@
 
     <node name="rviz" pkg="rviz" type="rviz" args="-d $(find racer_world)/launch/wallfollowing.rviz"/>
 
-    <node name="lap_timer" pkg="simulation_tools" type="lap_timer.py" output="screen"/>
+    <include file="$(find vesc_sim)/launch/vesc_sim.launch"/>
+
+
     <include file="$(find wallfollowing2)/launch/autonomous_driving.launch"/>
 
-    <group if="$(arg emergency_stop)">
-        <include file="$(find emergency_stop)/launch/emergency_stop.launch"/>
-    </group>
-
-    <include file="$(find vesc_sim)/launch/vesc_sim.launch"/>
     <include file="$(find car_control)/launch/car_control.launch">
         <arg name="mode_override" value="$(arg mode_override)"/>
     </include>
+
     <include file="$(find teleoperation)/launch/remote_control.launch">
         <arg name="joystick_type" value="$(arg joystick_type)"/>
     </include>
 
-    <node pkg="simulation_tools" type="crash_detector" name="crash_detector" output="screen">
-    </node>
+    <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" />
 </launch>
